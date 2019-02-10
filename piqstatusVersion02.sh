@@ -1,8 +1,9 @@
 #!/bin/sh
 ############################################################################
-## Author :PIQ Support
-## Date : 10/08/2018 	
+## Author : PIQ Support
+## Date : 01/28/2019 	
 ## Version : 2.0
+## Language : Bash
 ## Description : Display all the possible information of the PIQ Server
 ## that will help the PIQ Support to identify the issue.
 ##
@@ -17,8 +18,8 @@
 ###########################################################################
 
 #Variable
-piqVersion=$(ls -l /opt/rpstrata/ | grep "root ->"| awk -F "." '{print $3"."$4"."$5" " $7}')
-dateNow=$(date)
+piqVersion=$(ls -l /opt/rpstrata/ | awk -F "." '/root ->/{print $3"."$4"."$5" " $7}')
+dateTimeNow=$(date "+%B %d, %Y %A %r ")
 serverUptime=$(uptime | awk '$1=$1')
 vmOS=$(cat /etc/issue.net | head -n 1)
 vmHN=$(hostname)
@@ -47,7 +48,7 @@ echo -e "
 -------------------------------------------------
 System Information
 -------------------------------------------------
-Date : $dateNow
+Date : $dateTimeNow
 Server Uptime : $serverUptime
 OS : $vmOS
 HostName : $vmHN
