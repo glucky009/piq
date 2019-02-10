@@ -20,10 +20,9 @@
 #Variable
 piqVersion=$(ls -l /opt/rpstrata/ | awk -F "." '/root ->/{print $3"."$4"."$5" " $7}')
 dateTimeNow=$(date "+%B %d, %Y %A %r ")
-serverUptime=$(uptime | awk '$1=$1')
 vmOS=$(cat /etc/issue.net | head -n 1)
 vmHN=$(hostname)
-vmUser=$(who | awk '$1=$1')
+vmUptimeAndUser=$(w)
 vmVendor=$(dmidecode | egrep -i 'vendor' | head -n 1)
 vmManufacturer=$(dmidecode | egrep -i 'manufacturer' | head -n 1)
 vmProduct=$(dmidecode | egrep -i 'product' | head -n 1)
@@ -49,10 +48,10 @@ echo -e "
 System Information
 -------------------------------------------------
 Date : $dateTimeNow
-Server Uptime : $serverUptime
 OS : $vmOS
 HostName : $vmHN
-Currently Logged-in Users: $vmUser
+Server Uptime and Currently Logged-in Users: 
+$vmUptimeAndUser
 ${vmVendor//[[:blank:]]/}
 ${vmManufacturer//[[:blank:]]/}
 ${vmProduct//[[:blank:]]/}
