@@ -27,20 +27,20 @@ diskAvail=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($3/1000000)}'))
 dbdiskUsed=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($4/1000000)}'))
 dbdiskAvail=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($3/1000000)}'))
 backupSize=$(find / -name "rpstrata_[0-2][0-9][0-9][0-9]*.sql" | sort -Mr | xargs du -sh | awk -F"G" 'NR==1 {print $1}')
-logLocation="/var/log/rpstrata"
+logFileLocation="/var/log/rpstrata/piqlogs$dateNow.csv"
 
 # Log Output
 # Table Format
 {
 
-    if [ -f "$logLocation/piqlogs$dateNow.csv" ]; then
+    if [ -f $logFileLocation ]; then
         echo "Adding new log in the existing piqlogs.csv..."
-    echo "$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" >> $logLocation/piqlogs$dateNow.csv
+    echo "$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" >> $logFileLocation
     echo "New log added to $logLocation/piqlogs_$dateNow.csv"
     else 
        echo "Starting logfile" && echo -e "Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time, RAM Used (GB), RAM Total (GB), Boot Disk Size (GB), Boot Disk Used (GB),Disk Size (GB),Disk Used (GB),DB Disk Size (GB),DB Disk Used (GB),BUP Size (GB)
-$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" > $logLocation/piqlogs$dateNow.csv
-    echo "$logLocation/piqlogs$dateNow.csv has been created"
+$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" > $logFileLocation
+    echo "$logFileLocation has been created"
     fi
 } || {
     echo "Error creating logs"
