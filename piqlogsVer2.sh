@@ -33,14 +33,14 @@ logLocation="/var/log/rpstrata"
 # Table Format
 {
 
-    if [ -f "$logLocation/piqlogs.csv" ]; then
+    if [ -f "$logLocation/piqlogs$dateNow.csv" ]; then
         echo "Adding new log in the existing piqlogs.csv..."
-    echo "$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" >> $logLocation/piqlogs.csv
-    echo "New log added to $logLocation/piqlogs.csv"
+    echo "$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" >> $logLocation/piqlogs$dateNow.csv
+    echo "New log added to $logLocation/piqlogs_$dateNow.csv"
     else 
        echo "Starting logfile" && echo -e "Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time, RAM Used (GB), RAM Total (GB), Boot Disk Size (GB), Boot Disk Used (GB),Disk Size (GB),Disk Used (GB),DB Disk Size (GB),DB Disk Used (GB),BUP Size (GB)
-$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" > $logLocation/piqlogs.csv
-    echo "$logLocation/piqlogs.csv has been created"
+$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" > $logLocation/piqlogs$dateNow.csv
+    echo "$logLocation/piqlogs$dateNow.csv has been created"
     fi
 } || {
     echo "Error creating logs"
