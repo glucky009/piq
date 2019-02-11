@@ -26,12 +26,13 @@ diskUsed=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($4/1000000)}'))
 diskAvail=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($3/1000000)}'))
 dbdiskUsed=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($4/1000000)}'))
 dbdiskAvail=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($3/1000000)}'))
+backupSize=$(find / -name "rpstrata_[0-2][0-9][0-9][0-9]*.sql" | sort -Mr | xargs du -sh | awk -F"G" 'NR==1 {print $1}')
 
 # Log Output
 # Table Format
 {
     echo "Starting logfile" && echo -e "Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time, RAM Used (GB), RAM Total (GB), Boot Disk Size (GB), Boot Disk Used (GB),Disk Size (GB),Disk Used (GB),DB Disk Size (GB),DB Disk Used (GB),BUP Size,BUP Time,MySQL DB Size
-$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,,, " > piqlogs.csv
+$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize,," > piqlogs.csv
 echo $(pwd)"/piqlogs.csv has been created"
 } || {
     echo "Error creating logs"
