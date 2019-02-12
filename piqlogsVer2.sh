@@ -6,7 +6,7 @@
 ## Description : Create logs of the PIQ Server
 ## that will help the PIQ Support to audit server use through time.
 ## 
-## Table Format: Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time, RAM Used (GB), RAM Total (GB), Boot Disk Size (GB), Boot Disk Used (GB),Disk Size (GB),Disk Used (GB),DB Disk Size (GB),DB Disk Used (GB),BUP Size (GB)
+## Table Format: Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time (%), RAM Used (GB), RAM Total (GB), Boot Disk Size (GB), Boot Disk Used (GB),Disk Size (GB),Disk Used (GB),DB Disk Size (GB),DB Disk Used (GB),BUP Size (GB)
 ## Add this line in "crontab -e" of root to run every hour "5 * * * * /bin/bash /opt/rpstrata/piqlogs.sh"
 ##
 ## Note: This scipt will be ran every hour
@@ -41,7 +41,7 @@ logFileLocation="/var/log/rpstrata/piqlogs$dateNow.csv"
     echo "$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" >> $logFileLocation
     echo "New log added to $logFileLocation"
     else 
-       echo "Starting logfile" && echo -e "Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time, RAM Used (GB), RAM Total (GB), Boot Disk Size (GB), Boot Disk Used (GB),Disk Size (GB),Disk Used (GB),DB Disk Size (GB),DB Disk Used (GB),BUP Size (GB)
+       echo "Starting logfile" && echo -e "Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time (%), RAM Used (GB), RAM Total (GB), Boot Disk Size (GB), Boot Disk Used (GB),Disk Size (GB),Disk Used (GB),DB Disk Size (GB),DB Disk Used (GB),BUP Size (GB)
 $dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" > $logFileLocation
     echo "$logFileLocation has been created"
     fi
