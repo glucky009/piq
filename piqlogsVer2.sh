@@ -23,12 +23,12 @@ cpuGHz=$(printf "%0.2f\n" $(lscpu | awk  '/MHz/{print ($3/1000)}'))
 cpuIdle=$(top -b -n1 | awk /Cpu/'{print $5}' | awk -F"%" '{print $1}')
 memUsed=$(printf "%0.2f\n" $(free | awk '/Mem/{print ($3/1000000)}'))
 memTotal=$(printf "%0.2f\n" $(awk '/MemTotal/{print ($2/1000000)}' /proc/meminfo))
-bootdiskUsed=$(printf "%0.2f\n" $(df | awk '/root/{print ($4/1000000)}'))
-bootdiskAvail=$(printf "%0.2f\n" $(df | awk '/root/{print ($3/1000000)}'))
-diskUsed=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($4/1000000)}'))
-diskAvail=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($3/1000000)}'))
-dbdiskUsed=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($4/1000000)}'))
-dbdiskAvail=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($3/1000000)}'))
+diskSize=$(printf "%0.2f\n" $(df | awk '/root/{print ($3/1000000)}'))
+diskUsed=$(printf "%0.2f\n" $(df | awk '/root/{print ($2/1000000)}'))
+bootdiskSize=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($2/1000000)}'))
+bootdiskUsed=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($3/1000000)}'))
+dbdiskSize=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($2/1000000)}'))
+dbdiskUsed=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($3/1000000)}'))
 backupSize=$(find / -name "rpstrata_[0-2][0-9][0-9][0-9]*.sql" | sort -Mr | xargs du -sh | awk -F"G" 'NR==1 {print $1}')
 logFileLocation="/var/log/rpstrata/piqlogs$dateNow.csv"
 
@@ -38,11 +38,11 @@ logFileLocation="/var/log/rpstrata/piqlogs$dateNow.csv"
 
     if [ -f $logFileLocation ]; then
         echo "Adding new log in the existing piqlogs.csv..."
-    echo "$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" >> $logFileLocation
+    echo "$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskSize,$bootdiskUsed,$diskUsed,$diskSize,$dbdiskSize,$dbdiskUsed,$backupSize" >> $logFileLocation
     echo "New log added to $logFileLocation"
     else 
        echo "Starting logfile" && echo -e "Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time (%), RAM Used (GB), RAM Total (GB), Boot Disk Size (GB), Boot Disk Used (GB),Disk Size (GB),Disk Used (GB),DB Disk Size (GB),DB Disk Used (GB),BUP Size (GB)
-$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskAvail,$bootdiskUsed,$diskUsed,$diskAvail,$dbdiskUsed,$dbdiskAvail,$backupSize" > $logFileLocation
+$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskSize,$bootdiskUsed,$diskUsed,$diskSize,$dbdiskSize,$dbdiskUsed,$backupSize" > $logFileLocation
     echo "$logFileLocation has been created"
     fi
 } || {
