@@ -38,10 +38,13 @@ serverUptime = linuxCommand("uptime")
 vmOS = (' '.join(platform.linux_distribution()))
 vmHN = linuxCommand("hostname")
 vmUptimeAndUser = linuxCommand("w")
-vmSystemList = linuxCommand(["dmidecode", "-t", "1"])
+vmSystemList = linuxCommand(["dmidecode", "-t", "system"])
 vmManufactureProductName=vmSystemList.splitlines()
-
-platform.linux_distribution
+vmManufacture = vmManufactureProductName[5].strip('\t')
+vmProductName = vmManufactureProductName[6].strip('\t')  
+vmBiosList = linuxCommand(["dmidecode", "-t", "bios"])
+vmVendorSelect=vmBiosList.splitlines()
+vmVendor=vmVendorSelect[5].strip('\t')
 
 
 # Display Output
@@ -55,11 +58,11 @@ OS : %s
 HostName : %s
 Server Uptime and Currently Logged-in Users:
 %s
-Vendor : 
+%s
 %s
 %s
 PIQ Version :
-""" % (dateNow,vmOS,vmHN,vmUptimeAndUser,vmManufactureProductName[5], vmManufactureProductName[6])
+""" % (dateNow,vmOS,vmHN,vmUptimeAndUser,vmVendor,vmManufacture,vmProductName)
 
 clearScreen()
 print(output)
