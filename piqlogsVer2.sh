@@ -7,7 +7,7 @@
 ## that will help the PIQ Support to audit server use through time.
 ## 
 ## Table Format: Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time, RAM Used (GB), RAM Total (GB), Boot Disk Size (GB), Boot Disk Used (GB),Disk Size (GB),Disk Used (GB),DB Disk Size (GB),DB Disk Used (GB),BUP Size (GB)
-## Add this line in "crontab -e" to run every hour "5 * * * * /bin/bash /opt/rpstrata/piqlogs.sh"
+## Add this line in "crontab -e" of root to run every hour "5 * * * * /bin/bash /opt/rpstrata/piqlogs.sh"
 ##
 ## Note: This scipt will be ran every hour
 ##       Ideally the File size should be below 5KB
