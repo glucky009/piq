@@ -8,6 +8,8 @@ do
     if [[ $bgServer -eq 1 ]]; then
         rm -rf /opt/rpstrata/root/bg.pid
         rm -rf /opt/rpstrata/root/bg_nohup.log
+        service stunnel stop
+        service stunnel start
         /bin/bash /opt/rpstrata/bgserver_start.sh
         n=$[n+1]
         sleep 5
