@@ -15,27 +15,40 @@
 
 piqlogFiles=/var/log/rpstrata/piqlogs[0-2]*.csv
 dateMonth=$(date +"%Y-%m")
-dateMonthName=$(date +"%b-%Y %T")
+dateMonthTime=$(date +"%D %T")
 tarLogLocation="/var/log/rpstrata/tarLog.csv"
+tarErrorLocation="/var/log/rpstrata/tarErrorLog.csv"
+error=""
 
 #Function
 Compress ()
 {
-    tar cfzvP /var/log/rpstrata/piqlogs$dateMonth.tar.gz $piqlogFiles --remove-files
+    tar cfzvP /var/log/rpstrata/piqlogs$dateMonth.tar.gz $piqlogFiles --remove-files 
 }
 
 #Output
+{
+
 if [ -f $tarLogLocation ]; then
     for p in $(ls $piqlogFiles)
     do
-        echo "$dateMonthName,$p" >> $tarLogLocation
+        echo "$dateMonthTime,$p" >> $tarLogLocation
     done
     Compress > /dev/null
 else
     echo "Date, CSV File" > $tarLogLocation
     for p in $(ls $piqlogFiles)
     do
-        echo "$dateMonthName,$p" >> $tarLogLocation
-    done
-    Compress > /dev/null
+        echo "$dateMonthTime,$p" >> $tarLogLocation
+    done && Compress > /dev/null
 fi
+} || {
+
+if [ -f $tarErrorLocation ]; then
+    echo $dateMonthTime >> $tarErrorLocation
+    Compress 2>> $tarErrorLocation
+else
+    echo $dateMonthTime > $tarErrorLocation
+    Compress 2>> $tarErrorLocation
+fi
+}
