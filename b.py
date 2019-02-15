@@ -33,30 +33,19 @@ def linuxCommand (commandList):
     return proc.stdout.read().strip('\n')
 
 # Variables
-piqVersionList = linuxCommand(["ls", "-l", "/opt/rpstrata/root"])
-piqVersion = piqVersionList[80:87]
-piqVersionDate =  piqVersionList[103:115]
-
 dateNow = (datetime.datetime.now()).strftime(" %B %d, %Y %A %I:%M:%S %p")
 serverUptime = linuxCommand("uptime")
 vmOS = (' '.join(platform.linux_distribution()))
 vmHN = linuxCommand("hostname")
 vmUptimeAndUser = linuxCommand("w")
+vmManufactureList = linuxCommand(["dmidecode", "-t", "1"])
+vmManufacture=vmManufactureList.splitlines()
 
-vmSystemList = linuxCommand(["dmidecode", "-t", "system"])
-vmManufactureProductName=vmSystemList.splitlines()
-vmManufacture = vmManufactureProductName[5].strip('\t')
-vmProductName = vmManufactureProductName[6].strip('\t')  
+platform.linux_distribution
 
-vmBiosList = linuxCommand(["dmidecode", "-t", "bios"])
-vmVendorSelect=vmBiosList.splitlines()
-vmVendor=vmVendorSelect[5].strip('\t')
-
-vmMemoryConsumingList = linuxCommand(["top", "-a", "-n", "1"])
-vmMemoryConsuming = vmMemoryConsumingList[1185:2735]
 
 # Display Output
-# ps axo pid,user,%cpu,%mem,cmd --sort -rss
+
 output = """
 -------------------------------------------------
 System Information
@@ -66,17 +55,12 @@ OS : %s
 HostName : %s
 Server Uptime and Currently Logged-in Users:
 %s
-%s
-%s
-%s
-PIQ Version : %s %s
-
---------------------------------------------------
-Top 5 Memory-Consuming Processes
---------------------------------------------------
-PID USER      PR  NI  VIRT  RES  SHR S CPU MEM    TIME  COMMAND
-%s
-""" % (dateNow,vmOS,vmHN,vmUptimeAndUser,vmVendor,vmManufacture,vmProductName, piqVersion, piqVersionDate, vmMemoryConsuming)
+Vendor :
+Manufacturer : %s
+ProductName :
+PIQ Version :
+""" % (dateNow,vmOS,vmHN,vmUptimeAndUser,vmManufacture[5])
 
 clearScreen()
 print(output)
+

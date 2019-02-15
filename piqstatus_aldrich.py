@@ -6,6 +6,7 @@ import datetime
 import re
 import ethtool
 
+
 today = datetime.date.today()
 pfinfo = platform.uname()
 curruser = os.getlogin()
