@@ -48,3 +48,6 @@ $dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTo
 } || {
     echo "Error creating logs"
 }
+test
+test
+test
