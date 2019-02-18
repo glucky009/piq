@@ -8,6 +8,6 @@ def linuxCommand (commandList):
     return proc.stdout.read()
 
 #output = linuxCommand(["ps", "aux"])
-#output = linuxCommand(["top", "-a", "-n", "1"])
-output = linuxCommand(["ls"])
-print output
+output = linuxCommand(["top", "-a", "-n", "1"])
+#print (output.index("PID"))
+print (output[1185:2735])
