@@ -73,7 +73,7 @@ File System Disk Space Usage
 $(df -h)
 
 --------------------------------------------------
-Free and Used Memory in the System'
+Free and Used Memory in the System
 --------------------------------------------------
 $(free)
  

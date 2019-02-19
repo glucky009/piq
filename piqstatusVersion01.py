@@ -53,7 +53,21 @@ vmVendorSelect=vmBiosList.splitlines()
 vmVendor=vmVendorSelect[5].strip('\t')
 
 vmMemoryConsumingList = linuxCommand(["top", "-a", "-n", "1"])
-vmMemoryConsuming = vmMemoryConsumingList[1185:2735]
+vmMemoryConsuming = vmMemoryConsumingList[1183:1876]
+
+cpuPerformanceList = linuxCommand(["top", "-a", "-n", "1"])
+cpuPerformance = cpuPerformanceList[353:705]
+
+vmDisk = linuxCommand(["df", "-h"])
+vmRAM = linuxCommand("free")
+
+vmServicesSmbd = linuxCommand(["service", "smb", "status"])
+vmServicesNmb = linuxCommand(["service", "nmb", "status"])
+vmServicesNtpd = linuxCommand(["service", "ntpd", "status"])
+vmServicesHttpd = linuxCommand(["service", "httpd", "status"])
+vmServicesMysql = linuxCommand(["service", "mysqld", "status"])
+vmServicesStunnel = linuxCommand(["service", "stunnel", "status"])
+#vmServicesBGserver = linuxCommand(["service", "httpd", "status"])
 
 # Display Output
 # ps axo pid,user,%cpu,%mem,cmd --sort -rss
@@ -74,9 +88,36 @@ PIQ Version : %s %s
 --------------------------------------------------
 Top 5 Memory-Consuming Processes
 --------------------------------------------------
-PID USER      PR  NI  VIRT  RES  SHR S CPU MEM    TIME  COMMAND
 %s
-""" % (dateNow,vmOS,vmHN,vmUptimeAndUser,vmVendor,vmManufacture,vmProductName, piqVersion, piqVersionDate, vmMemoryConsuming)
+
+--------------------------------------------------
+CPU Performance Data
+--------------------------------------------------
+%s
+
+--------------------------------------------------
+File System Disk Space Usage
+--------------------------------------------------
+%s
+
+--------------------------------------------------
+Free and Used Memory in the System
+--------------------------------------------------
+%s
+
+--------------------------------------------------
+Service Statuses
+--------------------------------------------------
+%s
+%s
+%s
+%s
+%s
+%s
+
+
+""" % (dateNow,vmOS,vmHN,vmUptimeAndUser,vmVendor,vmManufacture,vmProductName, piqVersion, piqVersionDate, vmMemoryConsuming, cpuPerformance, vmDisk ,vmRAM, vmServicesSmbd, vmServicesNmb, vmServicesNtpd, vmServicesHttpd, vmServicesMysql, vmServicesStunnel)
 
 clearScreen()
 print(output)
+
