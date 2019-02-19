@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ############################################################################
 ## Author :PIQ Support
 ## Date : 11/02/2019 	
@@ -13,42 +13,45 @@
 
 #Variables
 
-piqlogFiles=/var/log/rpstrata/piqlogs[0-2]*.csv
+piqlogFiles="/var/log/rpstrata/piqlogs[0-2]*.csv"
 dateMonth=$(date +"%Y-%m")
 dateMonthTime=$(date +"%D %T")
 tarLogLocation="/var/log/rpstrata/tarLog.csv"
 tarErrorLocation="/var/log/rpstrata/tarErrorLog.csv"
-error=""
 
 #Function
 Compress ()
 {
-    tar cfzvP /var/log/rpstrata/piqlogs$dateMonth.tar.gz $piqlogFiles --remove-files 
+   tar cfzvP /var/log/rpstrata/piqlogs$dateMonth.tar.gz $piqlogFiles  
+}
+
+LogCreate ()
+{
+    if [ -f $tarLogLocation ]; then
+        for p in $(ls $piqlogFiles)
+        do
+            echo "$dateMonthTime,$p" >> $tarLogLocation
+        done
+    else
+        echo "Date, CSV File" > $tarLogLocation
+        for p in $(ls $piqlogFiles)
+        do
+            echo "$dateMonthTime,$p" >> $tarLogLocation
+        done
+    fi 
+}
+
+errorCatch ()
+{
+    if [ -f $tarErrorLocation ]; then
+        echo $dateMonthTime >> $tarErrorLocation
+        Compress 2>> $tarErrorLocation
+    else
+        echo $dateMonthTime > $tarErrorLocation
+        Compress 2>> $tarErrorLocation
+    fi
 }
 
 #Output
-{
 
-if [ -f $tarLogLocation ]; then
-    for p in $(ls $piqlogFiles)
-    do
-        echo "$dateMonthTime,$p" >> $tarLogLocation
-    done
-    Compress > /dev/null
-else
-    echo "Date, CSV File" > $tarLogLocation
-    for p in $(ls $piqlogFiles)
-    do
-        echo "$dateMonthTime,$p" >> $tarLogLocation
-    done && Compress > /dev/null
-fi
-} || {
-
-if [ -f $tarErrorLocation ]; then
-    echo $dateMonthTime >> $tarErrorLocation
-    Compress 2>> $tarErrorLocation
-else
-    echo $dateMonthTime > $tarErrorLocation
-    Compress 2>> $tarErrorLocation
-fi
-}
+( Compress && (LogCreate; $(rm -rf $piqlogFiles))) || ( errorCatch )
