@@ -23,8 +23,8 @@ cpuGHz=$(printf "%0.2f\n" $(lscpu | awk  '/MHz/{print ($3/1000)}'))
 cpuIdle=$(top -b -n1 | awk /Cpu/'{print $5}' | awk -F"%" '{print $1}')
 memUsed=$(printf "%0.2f\n" $(free | awk '/Mem/{print ($3/1000000)}'))
 memTotal=$(printf "%0.2f\n" $(awk '/MemTotal/{print ($2/1000000)}' /proc/meminfo))
-diskSize=$(printf "%0.2f\n" $(df | awk '/root/{print ($3/1000000)}'))
-diskUsed=$(printf "%0.2f\n" $(df | awk '/root/{print ($2/1000000)}'))
+diskSize=$(printf "%0.2f\n" $(df | awk '/root/{print ($2/1000000)}'))
+diskUsed=$(printf "%0.2f\n" $(df | awk '/root/{print ($3/1000000)}'))
 bootdiskSize=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($2/1000000)}'))
 bootdiskUsed=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($3/1000000)}'))
 dbdiskSize=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($2/1000000)}'))
@@ -41,13 +41,10 @@ logFileLocation="/var/log/rpstrata/piqlogs$dateNow.csv"
     echo "$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskSize,$bootdiskUsed,$diskUsed,$diskSize,$dbdiskSize,$dbdiskUsed,$backupSize" >> $logFileLocation
     echo "New log added to $logFileLocation"
     else 
-       echo "Starting logfile" && echo -e "Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time (%), RAM Used (GB), RAM Total (GB), Boot Disk Size (GB), Boot Disk Used (GB),Disk Size (GB),Disk Used (GB),DB Disk Size (GB),DB Disk Used (GB),BUP Size (GB)
-$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskSize,$bootdiskUsed,$diskUsed,$diskSize,$dbdiskSize,$dbdiskUsed,$backupSize" > $logFileLocation
+       echo "Starting logfile" && echo -e "Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time (%), RAM Used (GB), RAM Total (GB), Boot Disk Used (GB), Boot Disk Total (GB),Disk Used (GB), Disk Total (GB),DB Disk Used (GB),DB Disk Total (GB),BUP Size (GB)
+$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskUsed,$bootdiskSize,$diskUsed,$diskSize,$dbdiskUsed,$dbdiskSize,$backupSize" > $logFileLocation
     echo "$logFileLocation has been created"
     fi
 } || {
     echo "Error creating logs"
 }
-test
-test
-test
