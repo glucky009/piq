@@ -18,8 +18,10 @@ piqVersionList = linuxCommand(["ls", "-l", "/opt/rpstrata/root"])
 piqVersion = piqVersionList[80:87]
 piqVersionDate =  piqVersionList[103:115]
 
-dateNow = (datetime.datetime.now()).strftime("%m-%d-%Y")
+dateNow = (datetime.datetime.now()).strftime("%Y-%m-%d")
 timeNow = (datetime.datetime.now()).strftime("%H:%M:%S")
+
+piqLogfile = "/var/log/rpstrata/piqlogs"+dateNow+".csv"
 
 cpuInfo = linuxCommand(["lscpu"])
 cpuTop = linuxCommand(["top","-n1"])
@@ -50,7 +52,21 @@ dbDiskUsedGB = round(float(dbDiskUsed)/1000000, 2)
 dbDiskTotal = diskInfo[319:328]
 dbDiskTotalGB = round(float(dbDiskTotal)/1000000, 2)
 
-# Display Output
-# ps axo pid,user,%cpu,%mem,cmd --sort -rss
-print ("Dates, Time, PIQ Version, CPU Model, CPU(s), CPU(GHz), CPU Idle Time (%), RAM Used (GB), RAM Total (GB), Boot Disk Used (GB), Boot Disk Total (GB), Disk Used (GB), Disk Total (GB), DB Disk Used (GB), DB Disk Total (GB), BUP Size (GB)")
-print dateNow,",",timeNow,",",piqVersion,piqVersionDate,",",cpuModel2,",",cpuNumber,",",cpuGHz,",",cpuIdle,",",memUsedGHz,",",memTotalGHz,",",bootDiskUsedGB,",",bootDiskTotalGB,",",diskUsedGB,",",diskTotalGB,",",dbDiskUsedGB,",",dbDiskTotalGB,",",
+
+##
+
+if os.path.exists(piqLogfile):
+    print("Adding new log to "+piqLogfile )
+    myfile = open(piqLogfile, 'a+')
+    myfile.write("""%s,%s,%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+""" % (dateNow,timeNow,piqVersion,piqVersionDate,cpuModel2,cpuNumber,cpuGHz,cpuIdle,memUsedGHz,memTotalGHz,bootDiskUsedGB,bootDiskTotalGB,diskUsedGB,diskTotalGB,dbDiskUsedGB,dbDiskTotalGB))
+    myfile.close
+else:
+    print("Creating log file "+piqLogfile)
+    myfile = open(piqLogfile, 'w+')
+    myfile.write("Dates, Time, PIQ Version, CPU Model, CPU(s), CPU(GHz), CPU Idle Time (%), RAM Used (GB), RAM Total (GB), Boot Disk Used (GB), Boot Disk Total (GB), Disk Used (GB), Disk Total (GB), DB Disk Used (GB), DB Disk Total (GB), BUP Size (GB)")
+    myfile = open(piqLogfile, 'a+')
+    myfile.write("""
+%s,%s,%s %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+""" % (dateNow,timeNow,piqVersion,piqVersionDate,cpuModel2,cpuNumber,cpuGHz,cpuIdle,memUsedGHz,memTotalGHz,bootDiskUsedGB,bootDiskTotalGB,diskUsedGB,diskTotalGB,dbDiskUsedGB,dbDiskTotalGB))
+    myfile.close
