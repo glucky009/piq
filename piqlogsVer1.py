@@ -1,5 +1,20 @@
 #!/usr/bin/python
 
+############################################################################
+## Author :PIQ Support
+## Date : 17/02/2019 	
+## Version : 1.00
+## Language: Python 2.6
+## Log Location: /var/log/rpstrata
+## Description : Create logs of the PIQ Server
+## that will help the PIQ Support to audit server use through time.
+## 
+## Table Format: Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time (%), RAM Used (GB), RAM Total (GB), Boot Disk Used (GB), Boot Disk Total (GB),Disk Used (GB), Disk Total (GB),DB Disk Used (GB),DB Disk Total (GB),BUP Size (GB)
+##
+## Note: This scipt will be ran every hour
+##       Ideally the File size should be below 5KB
+###########################################################################
+
 import os
 import platform
 import sys
@@ -70,7 +85,7 @@ backupLatest = (backupFind[0])
 backupSize = linuxCommand(["find" ,"/" , "-name", backupLatest])
 backupTotalGB = round(float(file_size(backupSize))/1000000000, 2)
 
-##
+## Output
 
 if os.path.exists(piqLogfile):
     print("Adding new log to "+piqLogfile )
