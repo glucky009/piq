@@ -25,11 +25,11 @@ memUsed=$(printf "%0.2f\n" $(free | awk '/Mem/{print ($3/1000000)}'))
 memTotal=$(printf "%0.2f\n" $(awk '/MemTotal/{print ($2/1000000)}' /proc/meminfo))
 diskSize=$(printf "%0.2f\n" $(df | awk '/root/{print ($2/1000000)}'))
 diskUsed=$(printf "%0.2f\n" $(df | awk '/root/{print ($3/1000000)}'))
-bootdiskSize=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($2/1000000)}'))
-bootdiskUsed=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($3/1000000)}'))
-dbdiskSize=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($2/1000000)}'))
-dbdiskUsed=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($3/1000000)}'))
-backupSize=$(find / -name "rpstrata_[0-2][0-9][0-9][0-9]*.sql" | sort -Mr | xargs du -sh | awk -F"G" 'NR==1 {print $1}')
+bootdiskSize=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($3/1000000)}'))
+bootdiskUsed=$(printf "%0.2f\n" $(df | awk '/sda1/{print ($2/1000000)}'))
+dbdiskSize=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($3/1000000)}'))
+dbdiskUsed=$(printf "%0.2f\n" $(df | awk '/sdb1/{print ($2/1000000)}'))
+backupSize=$(printf "%0.2f\n" $(find / -name "rpstrata_[0-2][0-9][0-9][0-9]*.sql" -printf "%T@ %Tc %s %p\n" | sort -nr |awk 'NR==1 {print $9/1000000000}'))
 logFileLocation="/var/log/rpstrata/piqlogs$dateNow.csv"
 
 # Log Output
@@ -42,7 +42,7 @@ logFileLocation="/var/log/rpstrata/piqlogs$dateNow.csv"
     echo "New log added to $logFileLocation"
     else 
        echo "Starting logfile" && echo -e "Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time (%), RAM Used (GB), RAM Total (GB), Boot Disk Used (GB), Boot Disk Total (GB),Disk Used (GB), Disk Total (GB),DB Disk Used (GB),DB Disk Total (GB),BUP Size (GB)
-$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskUsed,$bootdiskSize,$diskUsed,$diskSize,$dbdiskUsed,$dbdiskSize,$backupSize" > $logFileLocation
+$dateNow,$time,$piqVersion,$cpuModel,$cpuNumber,$cpuGHz,$cpuIdle,$memUsed,$memTotal,$bootdiskSize,$bootdiskUsed,$diskUsed,$diskSize,$dbdiskSize,$dbdiskUsed,$backupSize" > $logFileLocation
     echo "$logFileLocation has been created"
     fi
 } || {
