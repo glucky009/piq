@@ -5,7 +5,6 @@ import platform
 import sys
 import datetime
 import subprocess
-import dmidecode
 import fnmatch
 
 #Function
@@ -19,9 +18,15 @@ def find(pattern, path):
     for root, dirs, files in os.walk(path):
         for name in files:
             if fnmatch.fnmatch(name, pattern):
-                result.append(os.path.join(root, name))
+                result.append(name)
     return result
 
-var01 = find('rpstrata_*.sql','/')
+def file_size(fname):
+    statinfo = os.stat(fname)
+    return statinfo.st_size
 
-print var01
+var01 = find("rpstrata_[0-2][0-9][0-9][0-9]*.sql",'/')
+var01.sort(reverse = True)
+var02 = (var01[0])
+var03=linuxCommand(["find" ,"/" , "-name", var02])
+print(round(float(file_size(var03))/1000000000, 2))
