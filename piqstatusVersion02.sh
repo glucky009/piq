@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ############################################################################
 ## Author : PIQ Support
 ## Date : 01/28/2019 	
@@ -26,17 +26,15 @@ vmUptimeAndUser=$(w)
 vmVendor=$(dmidecode | egrep -i 'vendor' | head -n 1)
 vmManufacturer=$(dmidecode | egrep -i 'manufacturer' | head -n 1)
 vmProduct=$(dmidecode | egrep -i 'product' | head -n 1)
-bgServer=$(ps aux | grep BG | wc -l)
-bgServerPID=$( ps aux | awk '/BG/ {print $2}' | head -n 1 )
+bgServer=$(ps -C "php startBG.php" -o pid=)
 cpuPerformance=$(top | head -n 3 | awk 'NR==3')
 netBootProtocol=$(awk -F "=" '/BOOTPROT/ {print $2}' /etc/sysconfig/network-scripts/ifcfg-eth0)
 netInterfaces=$(ip a s | awk -F ":" 'NR==1 || NR==6  {print $2}' ORS=' ')
 
 
 #BG Server Status Condition
-if [[ $bgServer -eq 2 ]]
-then
-	bgserverStatus="bgServer (pid $bgServerPID) is running..."
+if [[ $bgServer -ne "" ]]; then
+	bgserverStatus="bgServer (pid $bgServer) is running..."
 else
 	bgserverStatus="bgServer is stopped"
 fi

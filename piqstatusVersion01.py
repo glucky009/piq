@@ -53,7 +53,7 @@ vmVendorSelect=vmBiosList.splitlines()
 vmVendor=vmVendorSelect[5].strip('\t')
 
 vmMemoryConsumingList = linuxCommand(["top", "-a", "-n", "1"])
-vmMemoryConsuming = vmMemoryConsumingList[1183:1876]
+vmMemoryConsuming = vmMemoryConsumingList.splitlines()
 
 cpuPerformanceList = linuxCommand(["top", "-a", "-n", "1"])
 cpuPerformance = cpuPerformanceList[353:705]
@@ -67,10 +67,23 @@ vmServicesNtpd = linuxCommand(["service", "ntpd", "status"])
 vmServicesHttpd = linuxCommand(["service", "httpd", "status"])
 vmServicesMysql = linuxCommand(["service", "mysqld", "status"])
 vmServicesStunnel = linuxCommand(["service", "stunnel", "status"])
-#vmServicesBGserver = linuxCommand(["service", "httpd", "status"])
+vmServicesBGserver = linuxCommand(["ps", "-C", "php startBG.php", "-o", "pid="])
 
-# Display Output
-# ps axo pid,user,%cpu,%mem,cmd --sort -rss
+vmNetworkIPAddress = linuxCommand(["ip", "-o", "-4", "add", "show"])
+vmNetworkIPAddressLo = vmNetworkIPAddress[3:23]
+vmNetworkIPAddressEth = vmNetworkIPAddress[43:64]
+
+vmNetworkGateway = linuxCommand(["ip", "route"]).split(" ")
+vmNetworkDNSServer = linuxCommand(["cat", "/etc/resolv.conf"]).split(" ")
+
+
+#BG Server Status Condition
+if(vmServicesBGserver != ""):
+    vmServicesBGserverOutput = "bgServer (pid " + str(vmServicesBGserver) + ") is running..."
+else:
+  vmServicesBGserverOutput = "bgServer is stopped"
+
+
 output = """
 -------------------------------------------------
 System Information
@@ -88,8 +101,12 @@ PIQ Version : %s %s
 --------------------------------------------------
 Top 5 Memory-Consuming Processes
 --------------------------------------------------
+  PID USER      PR  NI  VIRT  RES  SHR S  CPU  MEM    TIME   COMMAND
 %s
-
+%s
+%s
+%s
+%s
 --------------------------------------------------
 CPU Performance Data
 --------------------------------------------------
@@ -108,15 +125,25 @@ Free and Used Memory in the System
 --------------------------------------------------
 Service Statuses
 --------------------------------------------------
-%s
-%s
-%s
-%s
-%s
-%s
+ %s
+ %s
+ %s
+ %s
+ %s
+ %s
+ %s
 
-
-""" % (dateNow,vmOS,vmHN,vmUptimeAndUser,vmVendor,vmManufacture,vmProductName, piqVersion, piqVersionDate, vmMemoryConsuming, cpuPerformance, vmDisk ,vmRAM, vmServicesSmbd, vmServicesNmb, vmServicesNtpd, vmServicesHttpd, vmServicesMysql, vmServicesStunnel)
+--------------------------------------------------
+Network Status and Configuration
+--------------------------------------------------
+Network Interface and IP Address
+ %s
+ %s
+Gateway
+ %s
+DNS Server
+ %s
+""" % (dateNow,vmOS,vmHN,vmUptimeAndUser,vmVendor,vmManufacture,vmProductName, piqVersion, piqVersionDate, vmMemoryConsuming[7], vmMemoryConsuming[8], vmMemoryConsuming[9], vmMemoryConsuming[10], vmMemoryConsuming[11], cpuPerformance, vmDisk ,vmRAM, vmServicesSmbd, vmServicesNmb, vmServicesNtpd, vmServicesHttpd, vmServicesMysql, vmServicesStunnel, vmServicesBGserverOutput, vmNetworkIPAddressLo, vmNetworkIPAddressEth, vmNetworkGateway[17],vmNetworkDNSServer[5])
 
 clearScreen()
 print(output)
