@@ -43,7 +43,7 @@ cpuModel2 = cpuModel[78:119]
 cpuNumber = cpuInfo[118:119]
 cpuMHz = cpuInfo[354:363]
 cpuGHz = round(float(cpuMHz)/1000, 2)
-cpuIdle = cpuTop[509:514]
+cpuIdle = cpuTop[509:512]
 
 memInfo = linuxCommand(["free"])
 memUsedMHz = memInfo[97:103]
