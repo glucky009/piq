@@ -1,7 +1,7 @@
 #!/bin/bash
 ############################################################################
 ## Author : PIQ Support
-## Date : 01/28/2019 	
+## Date : 28/01/2019 	
 ## Version : 2.0
 ## Language : Bash
 ## Description : Display all the possible information of the PIQ Server
