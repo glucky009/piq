@@ -20,7 +20,6 @@ import platform
 import sys
 import datetime
 import subprocess
-import dmidecode
 import fnmatch
 
 #Function
