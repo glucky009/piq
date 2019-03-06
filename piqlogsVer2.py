@@ -55,12 +55,12 @@ cpuInfo = linuxCommand(["lscpu"])
 cpuTop = linuxCommand(["top","-n1"])
 cpuModel = linuxCommand(["cat","/proc/cpuinfo"])
 cpuInfoCommand = cpuInfo.split()
-cpuTopCommand = cpuTop.split()
+cpuTopCommand = cpuTop.split(",")
 cpuModel2 = cpuModel[78:119]
 cpuNumber = cpuInfoCommand[10]
 cpuMHz = cpuInfoCommand[37]
 cpuGHz = round(float(cpuMHz)/1000, 2)
-cpuIdle = cpuTopCommand[27]
+cpuIdle = cpuTopCommand[11]
 
 memInfo = linuxCommand(["free"])
 memCommand = memInfo.split()
