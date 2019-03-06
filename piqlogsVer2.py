@@ -9,7 +9,7 @@
 ## Description : Create logs of the PIQ Server
 ## that will help the PIQ Support to audit server use through time.
 ## 
-## Table Format: Date,Time,PIQ Version,CPU Model,CPU(s),CPU (GHz), CPU Idle Time (%), RAM Used (GB), RAM Total (GB), Boot Disk Used (GB), Boot Disk Total (GB),Disk Used (GB), Disk Total (GB),DB Disk Used (GB),DB Disk Total (GB),BUP Size (GB)
+## Table Format: 'CLIENT NAME', 'DATE', 'TIME', 'KEY', 'VALUE'
 ##
 ## Note: This scipt will be ran every hour
 ##       Ideally the File size should be below 5KB
@@ -54,30 +54,34 @@ piqLogfile = "/var/log/rpstrata/piqlogs"+dateNow+".csv"
 cpuInfo = linuxCommand(["lscpu"])
 cpuTop = linuxCommand(["top","-n1"])
 cpuModel = linuxCommand(["cat","/proc/cpuinfo"])
+cpuInfoCommand = cpuInfo.split()
+cpuTopCommand = cpuTop.split()
 cpuModel2 = cpuModel[78:119]
-cpuNumber = cpuInfo[118:119]
-cpuMHz = cpuInfo[354:363]
+cpuNumber = cpuInfoCommand[10]
+cpuMHz = cpuInfoCommand[37]
 cpuGHz = round(float(cpuMHz)/1000, 2)
-cpuIdle = cpuTop[509:513]
+cpuIdle = cpuTopCommand[27]
 
 memInfo = linuxCommand(["free"])
-memUsedMHz = memInfo[97:103]
+memCommand = memInfo.split()
+memUsedMHz = memCommand[8]
 memUsedGHz = round(float(memUsedMHz)/1000000, 2)
-memTotalMHz = memInfo[85:92]
+memTotalMHz = memCommand[7]
 memTotalGHz = round(float(memTotalMHz)/1000000, 2)
 
 diskInfo = linuxCommand(["df"])
-bootDiskUsed = diskInfo[257:270]
+diskCommand = diskInfo.split()
+bootDiskUsed = diskCommand[21]
 bootDiskUsedGB = round(float(bootDiskUsed)/1000000, 2)
-bootDiskTotal = diskInfo[248:257]
+bootDiskTotal = diskCommand[20]
 bootDiskTotalGB = round(float(bootDiskTotal)/1000000, 2)
-diskUsed = diskInfo[116:125]
+diskUsed = diskCommand[9]
 diskUsedGB = round(float(diskUsed)/1000000, 2)
-diskTotal = diskInfo[106:115]
+diskTotal = diskCommand[8]
 diskTotalGB = round(float(diskTotal)/1000000, 2)
-dbDiskUsed = diskInfo[329:339]
+dbDiskUsed = diskCommand[27]
 dbDiskUsedGB = round(float(dbDiskUsed)/1000000, 2)
-dbDiskTotal = diskInfo[319:328]
+dbDiskTotal = diskCommand[26]
 dbDiskTotalGB = round(float(dbDiskTotal)/1000000, 2)
 
 backupFind = find("rpstrata_[0-2][0-9][0-9][0-9]*.sql",'/')
@@ -95,11 +99,11 @@ if os.path.exists(piqLogfile):
     print("Adding new log to "+piqLogfile )
     with open (piqLogfile, 'a') as csvFile:
         piqlogcreate = csv.writer(csvFile)
-        csvData =[clientName,dateNow,timeNow,'Date',dateNow], [clientName,dateNow,timeNow,'Time',timeNow], [clientName,dateNow,timeNow,'PIQ Version',piqVersion+"-"+piqVersionDate], [clientName,dateNow,timeNow,'CPU Model',cpuModel2], [clientName,dateNow,timeNow,'CPU(s)',cpuNumber], [clientName,dateNow,timeNow,'CPU (GHz)',cpuGHz], [clientName,dateNow,timeNow,'CPU Idle Time (%)',cpuIdle], [clientName,dateNow,timeNow,'RAM Total (GB)',memTotalGHz], [clientName,dateNow,timeNow,'RAM Used (GB)',memUsedGHz], [clientName,dateNow,timeNow,'Boot Disk Size (GB)',bootDiskTotalGB], [clientName,dateNow,timeNow,'Boot Disk Used (GB)',bootDiskUsedGB], [clientName,dateNow,timeNow,'Disk Total (GB)',diskTotalGB], [clientName,dateNow,timeNow,'Disk Used (GB)',diskUsedGB], [clientName,dateNow,timeNow,'DB Disk Size (GB)',dbDiskTotalGB], [clientName,dateNow,timeNow,'DB Disk Used (GB)',dbDiskUsedGB], [clientName,dateNow,timeNow,'BUP Size (GB)',backupTotalGB]
+        csvData =[clientName, dateNow, timeNow, 'Date', dateNow ], [clientName, dateNow, timeNow, 'Time', timeNow], [clientName, dateNow, timeNow, 'PIQ Version', piqVersion+"-"+piqVersionDate], [clientName, dateNow, timeNow, 'CPU Model', cpuModel2], [clientName, dateNow, timeNow, 'CPU(s)', cpuNumber ], [clientName, dateNow, timeNow, 'CPU (GHz)', cpuGHz], [clientName, dateNow, timeNow, 'CPU Idle Time (%)', cpuIdle], [clientName, dateNow, timeNow, 'RAM Total (GB)', memTotalGHz], [clientName, dateNow, timeNow, 'RAM Used (GB)', memUsedGHz], [clientName, dateNow, timeNow, 'Boot Disk Size (GB)', bootDiskTotalGB], [clientName, dateNow, timeNow, 'Boot Disk Used (GB)', bootDiskUsedGB], [clientName, dateNow, timeNow, 'Disk Total (GB)', diskTotalGB], [clientName, dateNow, timeNow, 'Disk Used (GB)', diskUsedGB], [clientName, dateNow, timeNow, 'DB Disk Size (GB)', dbDiskTotalGB], [clientName, dateNow, timeNow,'DB Disk Used (GB)', dbDiskUsedGB], [clientName, dateNow, timeNow, 'BUP Size (GB)', backupTotalGB]
         piqlogcreate.writerows(csvData)
 else:
     print("Creating logfile "+piqLogfile )
     with open (piqLogfile, 'w') as csvFile:
         piqlogcreate = csv.writer(csvFile)
-        csvData = ['CLIENT NAME','DATE','TIME','KEY','VALUE'], [clientName,dateNow,timeNow,'Date',dateNow], [clientName,dateNow,timeNow,'Time',timeNow], [clientName,dateNow,timeNow,'PIQ Version',piqVersion+"-"+piqVersionDate], [clientName,dateNow,timeNow,'CPU Model',cpuModel2], [clientName,dateNow,timeNow,'CPU(s)',cpuNumber], [clientName,dateNow,timeNow,'CPU (GHz)',cpuGHz], [clientName,dateNow,timeNow,'CPU Idle Time (%)',cpuIdle], [clientName,dateNow,timeNow,'RAM Total (GB)',memTotalGHz], [clientName,dateNow,timeNow,'RAM Used (GB)',memUsedGHz], [clientName,dateNow,timeNow,'Boot Disk Size (GB)',bootDiskTotalGB], [clientName,dateNow,timeNow,'Boot Disk Used (GB)',bootDiskUsedGB], [clientName,dateNow,timeNow,'Disk Total (GB)',diskTotalGB], [clientName,dateNow,timeNow,'Disk Used (GB)',diskUsedGB], [clientName,dateNow,timeNow,'DB Disk Size (GB)',dbDiskTotalGB], [clientName,dateNow,timeNow,'DB Disk Used (GB)',dbDiskUsedGB], [clientName,dateNow,timeNow,'BUP Size (GB)',backupTotalGB]
+        csvData = ['CLIENT NAME', 'DATE', 'TIME', 'KEY', 'VALUE'], [clientName, dateNow, timeNow, 'Date', dateNow ], [clientName, dateNow, timeNow, 'Time', timeNow], [clientName, dateNow, timeNow, 'PIQ Version', piqVersion+"-"+piqVersionDate], [clientName, dateNow, timeNow, 'CPU Model', cpuModel2], [clientName, dateNow, timeNow, 'CPU(s)', cpuNumber ], [clientName, dateNow, timeNow, 'CPU (GHz)', cpuGHz], [clientName, dateNow, timeNow, 'CPU Idle Time (%)', cpuIdle], [clientName, dateNow, timeNow, 'RAM Total (GB)', memTotalGHz], [clientName, dateNow, timeNow, 'RAM Used (GB)', memUsedGHz], [clientName, dateNow, timeNow, 'Boot Disk Size (GB)', bootDiskTotalGB], [clientName, dateNow, timeNow, 'Boot Disk Used (GB)', bootDiskUsedGB], [clientName, dateNow, timeNow, 'Disk Total (GB)', diskTotalGB], [clientName, dateNow, timeNow, 'Disk Used (GB)', diskUsedGB], [clientName, dateNow, timeNow, 'DB Disk Size (GB)', dbDiskTotalGB], [clientName, dateNow, timeNow,'DB Disk Used (GB)', dbDiskUsedGB], [clientName, dateNow, timeNow, 'BUP Size (GB)', backupTotalGB]
         piqlogcreate.writerows(csvData)
