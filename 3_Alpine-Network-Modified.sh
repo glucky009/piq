@@ -537,7 +537,13 @@ seperate_func "$Title"
 
 ## 3.4.1 Ensure TCP Wrappers is installed 
 
-apk add tcpd
+#apk add tcpd
+
+Header="Ensure TCP Wrappers is installed"
+Status="Cannot be set"
+csvstatus="Cannot be set"
+msg="TCP Wrappers not available"
+sendlogfile "$Header" "$status" "$msg"
 
 ## 3.4.2 Ensure /etc/hosts.allow is configured
 
